@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/remote_video_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="440dp"
+        android:background="@android:color/darker_gray" />
+
+    <FrameLayout
+        android:id="@+id/local_video_view_container"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="140dp"
+        android:background="@android:color/darker_gray" />
+
+</RelativeLayout>
