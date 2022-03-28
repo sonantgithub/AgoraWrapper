@@ -3,6 +3,7 @@ package com.example.agorawrapper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -29,9 +30,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Intent intent = null;
+        try {
+            intent = new Intent(this, Class.forName("com.example.standaloneagora.AgoraActivity"));
+            startActivity(intent);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
    //     downloadAgoraCredentialsFromFirebase();
-               mRtcEngine = initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIADY5QlHmBfUA8vCo1mFdvpDCvoGWNhFkvTlBpS2oR/WtuNzl6AAAAAAEAAJmhJv3xdAYgEAAQDeF0Bi", "Mohit");
+       //        mRtcEngine = initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIADY5QlHmBfUA8vCo1mFdvpDCvoGWNhFkvTlBpS2oR/WtuNzl6AAAAAAEAAJmhJv3xdAYgEAAQDeF0Bi", "Mohit");
 
     }
 

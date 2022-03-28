@@ -2,4 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.standaloneagora">
 
+    <application>
+        <activity
+            android:name=".AgoraActivity"
+            android:exported="false" />
+    </application>
+
 </manifest>
