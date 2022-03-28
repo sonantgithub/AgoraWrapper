@@ -19,20 +19,20 @@ public class AgoraClass extends AppCompatActivity {
     public RtcEngine uniqueRtcengin;
 
 
-    public void initializeAndJoinChannel(String appId, String token, String channelName) {
+    public void initializeAndJoinChannel(String appId, String token, String channelName,Context context,View view) {
         RtcEngine mRtcEngine;
         try {
-            mRtcEngine = RtcEngine.create(getBaseContext(), appId, mRtcEventHandler);
+           mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler);
         } catch (Exception e) {
             throw new RuntimeException("Check the error.");
         }
 
         // By default, video is disabled, and you need to call enableVideo to start a video stream.
-        mRtcEngine.enableVideo();
+       mRtcEngine.enableVideo();
 
-        FrameLayout container = findViewById(R.id.local_video_view_container);
+        FrameLayout container = (FrameLayout) view;
         // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+        SurfaceView surfaceView = RtcEngine.CreateRendererView(context);
         container.addView(surfaceView);
         // Pass the SurfaceView object to Agora so that it renders the local video.
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
