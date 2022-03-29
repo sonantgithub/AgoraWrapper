@@ -17,18 +17,20 @@ public class AgoraClass extends AppCompatActivity {
     public static final String TAG = "AgoraClass";
 
     public RtcEngine uniqueRtcengin;
+    public View remoteViewPublic;
+    public Context publicContext;
 
 
-    public void initializeAndJoinChannel(String appId, String token, String channelName,Context context,View view) {
+    public void initializeAndJoinChannel(String appId, String token, String channelName, Context context, View view, View remoteView) {
         RtcEngine mRtcEngine;
         try {
-           mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler);
+            mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler);
         } catch (Exception e) {
             throw new RuntimeException("Check the error.");
         }
 
         // By default, video is disabled, and you need to call enableVideo to start a video stream.
-       mRtcEngine.enableVideo();
+        mRtcEngine.enableVideo();
 
         FrameLayout container = (FrameLayout) view;
         // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
@@ -39,6 +41,8 @@ public class AgoraClass extends AppCompatActivity {
 
         // Join the channel with a token.
         mRtcEngine.joinChannel(token, channelName, "", 0);
+        remoteViewPublic = remoteView;
+        publicContext = context;
 
         Log.d(TAG, "process 1: ");
 
@@ -55,16 +59,16 @@ public class AgoraClass extends AppCompatActivity {
                 public void run() {
                     Log.d(TAG, "process 2: ");
                     // Call setupRemoteVideo to set the remote video view after getting uid from the onUserJoined callback.
-                    setupRemoteVideo(uid);
+                    setupRemoteVideo(uid, remoteViewPublic);
                 }
             });
         }
     };
 
-    public void setupRemoteVideo(int uid) {
+    public void setupRemoteVideo(int uid, View remoteview) {
         Log.d(TAG, "process 3: ");
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getApplicationContext());
+        FrameLayout container = (FrameLayout) remoteview;
+        SurfaceView surfaceView = RtcEngine.CreateRendererView(publicContext);
         surfaceView.setZOrderMediaOverlay(true);
         container.addView(surfaceView);
         uniqueRtcengin.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));

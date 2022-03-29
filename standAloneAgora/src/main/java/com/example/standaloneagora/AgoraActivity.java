@@ -23,8 +23,6 @@ public class AgoraActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     AgoraClass agoraClass = new AgoraClass();
 
-    public RtcEngine uniqueRtcengin;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +30,11 @@ public class AgoraActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: AgoraActivity");
 
-   agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIADieNKPbJadUU8qoZjyHhf9t6K/FwnDzxtCByjO+Kcd++Nzl6AAAAAAEAAg4mLWx31CYgEAAQDGfUJi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container));
+agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container),findViewById(R.id.remote_video_view_container));
 
 
         //     downloadAgoraCredentialsFromFirebase();
-  //initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIADieNKPbJadUU8qoZjyHhf9t6K/FwnDzxtCByjO+Kcd++Nzl6AAAAAAEAAg4mLWx31CYgEAAQDGfUJi", "Mohit",getBaseContext(),R.id.local_video_view_container);
+  //initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit",getBaseContext(),R.id.local_video_view_container);
     }
 
 //    public void initializeAndJoinChannel(String appId, String token, String channelName, Context context,int view) {
