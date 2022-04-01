@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,48 +22,71 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class AgoraActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
-    AgoraClass agoraClass = new AgoraClass();
+    //   AgoraClass agoraClass = new AgoraClass();\
+    RtcEngine uniqueRtcengin;
+    SigneyStreamingClass signeyStreamingClass = new SigneyStreamingClass();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agora);
 
         Log.d(TAG, "onCreate: AgoraActivity");
 
-agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container),findViewById(R.id.remote_video_view_container));
+
+        signeyStreamingClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f","006306d4292730a4434906dec9a80964d6fIAAoMuVXs2t5K7LGXt8jdMnb/26ep/du4/f3Pgb9KvZo9wLTMuAAAAAAEABrDG+dLBJIYgEAAQAqEkhi","MohitMohit",getBaseContext(),findViewById(R.id.remote_video_view_container));
+
+        //  agoraClass.startStreaming("test",1, getBaseContext(), findViewById(R.id.local_video_view_container), findViewById(R.id.remote_video_view_container));
+//agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAAoS4qmHb2mnSTm8Fxq+1cOQpmVwKET7g0uZs5IUD0CCuNzl6AAAAAAEADR1hyrrYZFYgEAAQCshkVi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container),findViewById(R.id.remote_video_view_container));
 
 
-        //     downloadAgoraCredentialsFromFirebase();
-  //initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit",getBaseContext(),R.id.local_video_view_container);
+     //   downloadAgoraCredentialsFromFirebaseAndRun();
+        //initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit",getBaseContext(),R.id.local_video_view_container);
     }
 
-//    public void initializeAndJoinChannel(String appId, String token, String channelName, Context context,int view) {
+//  private void downloadAgoraCredentialsFromFirebaseAndRun() {
+//
+//        FirebaseDatabase.getInstance("https://signeywebdb.firebaseio.com/").getReference().child("unitysign/agoraCredentials").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                String appID = dataSnapshot.child("appId").getValue().toString();
+//                String temporaryToken = dataSnapshot.child("token").getValue().toString();
+//                String channelName = dataSnapshot.child("channelName").getValue().toString();
+//                Log.d(TAG, "onDataChange: " + appID + temporaryToken + channelName);
+//                initializeAndJoinChannel(appID, temporaryToken, channelName, getBaseContext(), R.id.remote_video_view_container);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(AgoraActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//    }
+//
+//    public void initializeAndJoinChannel(String appId, String token, String channelName, Context context, int view) {
 //        RtcEngine mRtcEngine = null;
 //        try {
-//           mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler);
+//            mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler);
 //        } catch (Exception e) {
 //            throw new RuntimeException("Check the error.");
 //        }
 //
 //        // By default, video is disabled, and you need to call enableVideo to start a video stream.
 //        mRtcEngine.enableVideo();
-//
-//        FrameLayout container = findViewById(view);
-//        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
-//        SurfaceView surfaceView = RtcEngine.CreateRendererView(context);
-//        container.addView(surfaceView);
-//        // Pass the SurfaceView object to Agora so that it renders the local video.
-//        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
-//
+////        FrameLayout container = findViewById(view);
+////        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
+////        SurfaceView surfaceView = RtcEngine.CreateRendererView(context);
+////        //container.addView(surfaceView);
+////        // Pass the SurfaceView object to Agora so that it renders the local video.
+////        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
 //        // Join the channel with a token.
 //        mRtcEngine.joinChannel(token, channelName, "", 0);
-//
-//        Log.d(TAG, "process 1: ");
-//
 //        uniqueRtcengin = mRtcEngine;
 //    }
-
+//
 //    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
 //
 //        @Override
@@ -78,7 +102,7 @@ agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d
 //            });
 //        }
 //    };
-
+//
 //    public void setupRemoteVideo(int uid) {
 //        Log.d(TAG, "process 3: ");
 //        FrameLayout container = findViewById(R.id.remote_video_view_container);
@@ -87,7 +111,7 @@ agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d
 //        container.addView(surfaceView);
 //        uniqueRtcengin.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
 //    }
-
+//
 //    @Override
 //    protected void onDestroy() {
 //        super.onDestroy();
