@@ -54,12 +54,6 @@ public class SigneyStreamingClass extends AppCompatActivity {
         clientPasswordcopy = clientPassword;
         stringToConvertCopy = stringToConvert;
 
-
-//        Glide.with(context)
-//                .load(R.raw.defposegif)
-//                .centerCrop()
-//                .into((ImageView) gifView);
-
         if ("no".equals(userComingForFirstTime)) {
 
             Log.d(TAG, "startStreaminggy: " + userComingForFirstTime);
