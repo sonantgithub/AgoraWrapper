@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = null;
         try {
-            intent = new Intent(this, Class.forName("com.example.standaloneagora.AgoraActivity"));
+            intent = new Intent(this, Class.forName("com.example.standaloneagora.TestingActivity"));
             startActivity(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -42,84 +42,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void downloadAgoraCredentialsFromFirebase() {
-
-        FirebaseDatabase.getInstance("https://testdbsigneybooks.firebaseio.com/").getReference().child("AgoraCredentials").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String appID = dataSnapshot.child("appID").getValue().toString();
-                String temporaryToken = dataSnapshot.child("temporaryToken").getValue().toString();
-                String channelName = dataSnapshot.child("channelName").getValue().toString();
-
-
-                Log.d(TAG, "onDataChange: " + appID + temporaryToken + channelName);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-
-        @Override
-        // Listen for the remote user joining the channel to get the uid of the user.
-        public void onUserJoined(int uid, int elapsed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "run: ");
-                    // Call setupRemoteVideo to set the remote video view after getting uid from the onUserJoined callback.
-                    setupRemoteVideo(uid);
-                }
-            });
-        }
-    };
-
-    public void setupRemoteVideo(int uid) {
-        Log.d(TAG, "setupRemoteVideo: ");
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getApplicationContext());
-        surfaceView.setZOrderMediaOverlay(true);
-        container.addView(surfaceView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
-    }
-
-    public RtcEngine initializeAndJoinChannel(String appId, String token, String channelName) {
-        Log.d(TAG, "initializeAndJoinChannel: ");
-
-
-        try {
-            mRtcEngine = RtcEngine.create(getBaseContext(), appId, mRtcEventHandler);
-        } catch (Exception e) {
-            throw new RuntimeException("Check the error.");
-        }
-
-        // By default, video is disabled, and you need to call enableVideo to start a video stream.
-        mRtcEngine.enableVideo();
-
-        FrameLayout container = findViewById(R.id.local_video_view_container);
-        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        container.addView(surfaceView);
-        // Pass the SurfaceView object to Agora so that it renders the local video.
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
-
-        // Join the channel with a token.
-        mRtcEngine.joinChannel(token, channelName, "", 0);
-
-        return mRtcEngine;
-
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mRtcEngine.leaveChannel();
-        mRtcEngine.destroy();
-    }
 }

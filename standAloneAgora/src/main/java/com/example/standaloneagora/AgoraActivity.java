@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -21,32 +22,42 @@ import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 
 public class AgoraActivity extends AppCompatActivity {
-    public static final String TAG = "MainActivity";
-    //   AgoraClass agoraClass = new AgoraClass();\
+    public static final String TAG = "AgoraActivity";
+    AgoraClass agoraClass = new AgoraClass();
     RtcEngine uniqueRtcengin;
+    EditText editText;
     SigneyStreamingClass signeyStreamingClass = new SigneyStreamingClass();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agora);
 
         Log.d(TAG, "onCreate: AgoraActivity");
+        editText = findViewById(R.id.edittextBox);
 
 
-        signeyStreamingClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f","006306d4292730a4434906dec9a80964d6fIAAoMuVXs2t5K7LGXt8jdMnb/26ep/du4/f3Pgb9KvZo9wLTMuAAAAAAEABrDG+dLBJIYgEAAQAqEkhi","MohitMohit",getBaseContext(),findViewById(R.id.remote_video_view_container));
-
+        //  signeyStreamingClass.initializeAndJoinChannel("a598cb8ca7804d4a93c530231b898429","006a598cb8ca7804d4a93c530231b898429IAA8cN8wQEWgPPJcFl0P0IwGez9sKsV0HRQM1UHxhIdxcR4wfbQAAAAAEABg4SwUkWdNYgEAAQCPZ01i","1649153336256",getBaseContext(),findViewById(R.id.remote_video_view_container));
         //  agoraClass.startStreaming("test",1, getBaseContext(), findViewById(R.id.local_video_view_container), findViewById(R.id.remote_video_view_container));
-//agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAAoS4qmHb2mnSTm8Fxq+1cOQpmVwKET7g0uZs5IUD0CCuNzl6AAAAAAEADR1hyrrYZFYgEAAQCshkVi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container),findViewById(R.id.remote_video_view_container));
+        //agoraClass.initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAAoS4qmHb2mnSTm8Fxq+1cOQpmVwKET7g0uZs5IUD0CCuNzl6AAAAAAEADR1hyrrYZFYgEAAQCshkVi", "Mohit", getBaseContext(),findViewById(R.id.local_video_view_container),findViewById(R.id.remote_video_view_container));
 
 
-     //   downloadAgoraCredentialsFromFirebaseAndRun();
+        //   downloadAgoraCredentialsFromFirebaseAndRun();
         //initializeAndJoinChannel("306d4292730a4434906dec9a80964d6f", "006306d4292730a4434906dec9a80964d6fIAArrGwEm53R0ZIXvtT6EbhbAVi6HVqZSYXfQiV/oGIDwONzl6AAAAAAEAAJmhJv685DYgEAAQDozkNi", "Mohit",getBaseContext(),R.id.local_video_view_container);
     }
 
-//  private void downloadAgoraCredentialsFromFirebaseAndRun() {
+    public void SendDataToFireBase(View view) {
+        signeyStreamingClass.startStreaming("c1", "c1@password", getBaseContext(), editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        signeyStreamingClass.stopStreaming();
+        super.onStop();
+    }
+    //  private void downloadAgoraCredentialsFromFirebaseAndRun() {
 //
 //        FirebaseDatabase.getInstance("https://signeywebdb.firebaseio.com/").getReference().child("unitysign/agoraCredentials").addValueEventListener(new ValueEventListener() {
 //            @Override

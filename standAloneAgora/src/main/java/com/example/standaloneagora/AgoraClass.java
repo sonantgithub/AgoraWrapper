@@ -49,8 +49,7 @@ public class AgoraClass extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
 
-                                        initializeAndJoinChannel("3b39f5b040784990a19ed302ea47f051", "0063b39f5b040784990a19ed302ea47f051IAAYC+VljV5ZjNM0nqW0qYarJieyv9zAHxEH+dj1q/s3Xh8PEr0AAAAAIgCXeLre5CdFYgQAAQA3akhiAgA3akhiAwA3akhiBAA3akhi", "Mohit5", getBaseContent, localView, remoteView);
-
+                                        initializeAndJoinChannel("a598cb8ca7804d4a93c530231b898429", "006a598cb8ca7804d4a93c530231b898429IAD0sl0Wq7UNEWhruOO1TsuX4dYJn/OmANX+GwpvgwHQ6MJSX3EAAAAAEABrDG+drtJLYgEAAQCu0kti", "Mohitttt", getBaseContent, localView, remoteView);
 
                                     }
                                 });
@@ -105,7 +104,8 @@ public class AgoraClass extends AppCompatActivity {
         }
     };
 
-    public void setupRemoteVideo(int uid, View remoteview) {
+    public void setupRemoteVideo(int uid, View remoteview)
+    {
         Log.d(TAG, "process 3: ");
         FrameLayout container = (FrameLayout) remoteview;
         SurfaceView surfaceView = RtcEngine.CreateRendererView(publicContext);

@@ -6,6 +6,9 @@
         <activity
             android:name=".AgoraActivity"
             android:exported="false" />
+        <activity
+            android:name=".TestingActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
