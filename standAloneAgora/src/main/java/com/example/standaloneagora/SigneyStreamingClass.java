@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,6 +54,7 @@ public class SigneyStreamingClass extends AppCompatActivity {
         clientIdCopy = clientId;
         clientPasswordcopy = clientPassword;
         stringToConvertCopy = stringToConvert;
+        FirebaseApp.initializeApp(publicContext);
 
         if ("no".equals(userComingForFirstTime)) {
 
@@ -63,7 +65,7 @@ public class SigneyStreamingClass extends AppCompatActivity {
             validationOfCredentials();
             Log.d(TAG, "startStreaminggn: " + userComingForFirstTime);
         }
-//test
+
     }
 
     /**
