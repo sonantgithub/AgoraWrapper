@@ -63,7 +63,7 @@ public class SigneyStreamingClass extends AppCompatActivity {
             validationOfCredentials();
             Log.d(TAG, "startStreaminggn: " + userComingForFirstTime);
         }
-
+//test
     }
 
     /**
