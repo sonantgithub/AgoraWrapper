@@ -20,7 +20,7 @@ public class Toasty {
 
     public void testingofFirebase(Context context, String text) {
 
-        FirebaseApp.initializeApp(context.getApplicationContext());
+        FirebaseApp.initializeApp(context);
 
 
         HashMap hashMap = new HashMap();
