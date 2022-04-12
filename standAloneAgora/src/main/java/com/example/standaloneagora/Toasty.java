@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
@@ -18,6 +19,10 @@ public class Toasty {
     }
 
     public void testingofFirebase(Context context, String text) {
+
+        FirebaseApp.initializeApp(context.getApplicationContext());
+
+
         HashMap hashMap = new HashMap();
         hashMap.put("test", "test");
 
