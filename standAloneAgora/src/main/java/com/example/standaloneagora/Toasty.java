@@ -21,8 +21,6 @@ public class Toasty {
 
     public void testingofFirebase(Context context, String text) {
 
-        FirebaseApp.initializeApp(contextlib.getApplicationContext());
-
         HashMap hashMap = new HashMap();
         hashMap.put("test", "test");
 
