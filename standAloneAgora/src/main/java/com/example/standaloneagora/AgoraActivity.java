@@ -27,6 +27,7 @@ public class AgoraActivity extends AppCompatActivity {
     RtcEngine uniqueRtcengin;
     EditText editText;
     SigneyStreamingClass signeyStreamingClass = new SigneyStreamingClass();
+    Toasty toasty = new Toasty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class AgoraActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: AgoraActivity");
         editText = findViewById(R.id.edittextBox);
+
 
 
         //  signeyStreamingClass.initializeAndJoinChannel("a598cb8ca7804d4a93c530231b898429","006a598cb8ca7804d4a93c530231b898429IAA8cN8wQEWgPPJcFl0P0IwGez9sKsV0HRQM1UHxhIdxcR4wfbQAAAAAEABg4SwUkWdNYgEAAQCPZ01i","1649153336256",getBaseContext(),findViewById(R.id.remote_video_view_container));

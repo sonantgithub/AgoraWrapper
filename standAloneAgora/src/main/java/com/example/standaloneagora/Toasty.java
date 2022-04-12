@@ -13,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 public class Toasty {
-    Context contextLibrary;
+    Context contextlib;
 
     public void simpleMsg(Context context, String text) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
@@ -21,7 +21,7 @@ public class Toasty {
 
     public void testingofFirebase(Context context, String text) {
 
-        FirebaseApp.initializeApp(contextLibrary);
+        FirebaseApp.initializeApp(contextlib.getApplicationContext());
 
         HashMap hashMap = new HashMap();
         hashMap.put("test", "test");
