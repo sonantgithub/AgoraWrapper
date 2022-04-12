@@ -17,7 +17,7 @@ public class Toasty {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
 
-    public void testingofFirebase() {
+    public void testingofFirebase(Context context, String text) {
         HashMap hashMap = new HashMap();
         hashMap.put("test", "test");
 
@@ -26,7 +26,7 @@ public class Toasty {
                 .addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                     }
                 });
 
