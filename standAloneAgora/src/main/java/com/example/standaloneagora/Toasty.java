@@ -20,14 +20,12 @@ public class Toasty {
     public void simpleMsg(Context context, String text) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
     }
-
     public void testingofFirebase(Context context, String text) {
 
-        FirebaseApp.initializeApp(contextlib);
+        FirebaseApp.initializeApp(contextlib.getApplicationContext());
 
         HashMap hashMap = new HashMap();
         hashMap.put("test", "test");
-
 
         reference.child("testing").updateChildren(hashMap)
                 .addOnCompleteListener(new OnCompleteListener() {
@@ -36,6 +34,5 @@ public class Toasty {
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 }
