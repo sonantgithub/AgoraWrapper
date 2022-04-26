@@ -28,6 +28,7 @@ public class AgoraActivity extends AppCompatActivity {
     EditText editText;
     SigneyStreamingClass signeyStreamingClass = new SigneyStreamingClass();
     Toasty toasty = new Toasty();
+    StartSignStreaming startSignStreaming = new StartSignStreaming();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +50,14 @@ public class AgoraActivity extends AppCompatActivity {
     }
 
     public void SendDataToFireBase(View view) {
-        signeyStreamingClass.startStreaming("c1", "c1@password", getBaseContext(), editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
+        startSignStreaming.start("c1", "c1@password", getBaseContext(), editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
 
 
 
     @Override
     protected void onStop() {
-        signeyStreamingClass.stopStreaming();
+      //  startSignStreaming.stopStreaming();
         super.onStop();
     }
     //  private void downloadAgoraCredentialsFromFirebaseAndRun() {
