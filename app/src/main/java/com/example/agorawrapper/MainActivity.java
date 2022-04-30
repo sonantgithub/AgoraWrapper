@@ -22,7 +22,7 @@ import io.agora.rtc.video.VideoCanvas;
 public class MainActivity extends AppCompatActivity {
 
     public RtcEngine mRtcEngine;
-    public static final String TAG = "MainActivity";
+    public static final String maintag = "MainActivity";
 
 
     @Override

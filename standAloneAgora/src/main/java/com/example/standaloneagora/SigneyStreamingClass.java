@@ -32,7 +32,7 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class SigneyStreamingClass extends AppCompatActivity {
 
-    public static final String TAG = "SigneyStreamingClass";
+    public static final String maintag = "SigneyStreamingClass";
 
     Toasty toasty = new Toasty();
     public RtcEngine uniqueRtcengin;
@@ -58,12 +58,12 @@ public class SigneyStreamingClass extends AppCompatActivity {
 
         if ("no".equals(userComingForFirstTime)) {
 
-            Log.d(TAG, "startStreaminggy: " + userComingForFirstTime);
+            Log.d(maintag, "startStreaminggy: " + userComingForFirstTime);
 
             sendStringToFirebase();
         } else {
             validationOfCredentials();
-            Log.d(TAG, "startStreaminggn: " + userComingForFirstTime);
+            Log.d(maintag, "startStreaminggn: " + userComingForFirstTime);
         }
 
     }
@@ -119,12 +119,12 @@ public class SigneyStreamingClass extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.hasChild(time)) {
-                    Log.d(TAG, "onDataChange: i am here 1 ");
+                    Log.d(maintag, "onDataChange: i am here 1 ");
 
                     tempAppId = snapshot.child(time).child("appId").getValue().toString();
                     tempTokenNumber = snapshot.child(time).child("token").getValue().toString();
 
-                    Log.d(TAG, "onDataChange: 15" + tempAppId + tempTokenNumber);
+                    Log.d(maintag, "onDataChange: 15" + tempAppId + tempTokenNumber);
                     startUnityStreaming();
                 }
 
@@ -197,7 +197,7 @@ public class SigneyStreamingClass extends AppCompatActivity {
     };
 
     public void setupRemoteVideo(int uid, View remoteview) {
-        Log.d(TAG, "process 3: ");
+        Log.d(maintag, "process 3: ");
         FrameLayout container = (FrameLayout) remoteview;
         SurfaceView surfaceView = RtcEngine.CreateRendererView(publicContext);
         surfaceView.setZOrderMediaOverlay(true);
@@ -224,9 +224,9 @@ public class SigneyStreamingClass extends AppCompatActivity {
                 if (snapshot.hasChild("isChannelDestroyed")) {
 
                     String leaveChannelIfUserIsNotUsing = snapshot.child("isChannelDestroyed").getValue().toString();
-                    Log.d(TAG, "onDataChange: 5 " + leaveChannelIfUserIsNotUsing);
+                    Log.d(maintag, "onDataChange: 5 " + leaveChannelIfUserIsNotUsing);
                     if ("true".equals(leaveChannelIfUserIsNotUsing)) {
-                        Log.d(TAG, "onDataChange:6 ");
+                        Log.d(maintag, "onDataChange:6 ");
                         Toast.makeText(publicContext, "stop streaming", Toast.LENGTH_SHORT).show();
 
 

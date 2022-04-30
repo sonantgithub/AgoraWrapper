@@ -1,6 +1,7 @@
 package com.example.standaloneagora;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -21,14 +23,16 @@ import java.util.Map;
 import io.agora.rtc.RtcEngine;
 
 public class StartSignStreaming extends AppCompatActivity {
+    private static final String TAG = "StartSignStreaming";
     public RtcEngine uniqueRtcengin;
     public View remoteViewPublic, gifView;
     public Context publicContext;
     public String clientIdCopy, clientPasswordcopy, stringToConvertCopy;
     public String tempChannelName, tempAppId, tempTokenNumber;
-    public String time, userComingForFirstTime;
+    public String time, userComingForFirstTime,currentTimeMiles;
     public long timeOfStreamingStart, timeOfStreamingStopped, totalTimeOfStreming;
     public int countOfTotalHits;
+    public int countOfNumberOfHit;
 
     public void start(String clientId, String clientPassword, Context context, String stringToConvert, View view, View gifId) {
         publicContext = context;
@@ -38,33 +42,40 @@ public class StartSignStreaming extends AppCompatActivity {
         clientPasswordcopy = clientPassword;
         stringToConvertCopy = stringToConvert;
 
-        validationOfUser();
+       validationOfUserANDturnOnNewChannelFlag();
 
     }
 
-    private void validationOfUser() {
+    private void validationOfUserANDturnOnNewChannelFlag() {
 
         RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/validationOfTheUser", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("TAG", "onResponse: "+response.toString());
-                if (response.toString().equals("Matching strings")){
-                    Toast.makeText(publicContext, "Matched credentials", Toast.LENGTH_SHORT).show();
+                Log.d("MAINTAG", "123onResponse: "+response.toString());
+
+                if (response.toString().contains("Match Strings")){
+                    Toast.makeText(publicContext, "right credentials", Toast.LENGTH_SHORT).show();
+                    currentTimeMiles =response.toString().substring(response.toString().indexOf(",")+1,response.toString().length());
+                    Log.d("MAINTAG", "onResponseCurrentTimeMiles: "+currentTimeMiles);
+                    listenForTokenAndAppId();
                 }
-                else {
-                    Toast.makeText(publicContext, "Wrong credentials", Toast.LENGTH_SHORT).show();
+                else{
+                    Toast.makeText(publicContext, "wrong credentials", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("MAINTAG", "123onError: "+error.getMessage());
+
                 Toast.makeText(publicContext, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
-            protected Map<String,String> getParams(){
+            protected Map<String,String> getParams()
+            {
                 Map<String,String> params = new HashMap<String,String>();
                 params.put("IdOfClient",clientIdCopy);
                 params.put("PasswordOfClient",clientPasswordcopy);
@@ -81,5 +92,63 @@ public class StartSignStreaming extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
 
+    }
+
+    private void listenForTokenAndAppId() {
+
+        if (countOfNumberOfHit<25){
+            RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/ListenIfAnyChannelIsCreatedOrNot", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (response.toString().equals("inifbloack"))
+                    {
+                        Log.d("MAINTAG", "onResponseListener1: Stop");
+                    }
+                    else
+                    {
+                        Log.d("MAINTAG", "onResponseListener1: "+response.toString()+countOfNumberOfHit);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                listenForTokenAndAppId();
+                            }
+                        }, 1000);
+
+
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MAINTAG", "onErrorListener1: "+error.toString()+currentTimeMiles);
+
+
+                }
+            }){
+                @Override
+                protected Map<String,String> getParams(){
+                    Map<String,String> params = new HashMap<String,String>();
+                    params.put("currentTimeMiles",currentTimeMiles);
+
+                    return params;
+                }
+
+                @Override
+                public Map<String,String> getHeaders() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String,String>();
+                    params.put("content-type","application/x-www-form-urlencoded");
+                    return params;
+                }
+
+            };
+            requestQueue.add(stringRequest);
+            countOfNumberOfHit++;
+        }
+  else{
+            Toast.makeText(publicContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
     }
 }
