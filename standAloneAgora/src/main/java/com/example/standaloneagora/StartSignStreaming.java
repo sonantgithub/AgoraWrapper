@@ -1,7 +1,9 @@
 package com.example.standaloneagora;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -17,7 +19,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,9 +43,10 @@ public class StartSignStreaming extends AppCompatActivity {
     public String clientIdCopy, clientPasswordcopy, stringToConvertCopy;
     public String tempChannelName, tempAppId, tempTokenNumber;
     public String time, userComingForFirstTime, currentTimeMiles;
-    public long timeOfStreamingStart, timeOfStreamingStopped, totalTimeOfStreming;
+    public long timeOfStreamingStopped, totalTimeOfStreming;
     public int countOfTotalHits;
     public int countOfNumberOfHit;
+    ProgressDialog progress;
 
     public void start(String clientId, String clientPassword, Context context, String stringToConvert, View view, View gifId) {
         publicContext = context;
@@ -49,12 +55,31 @@ public class StartSignStreaming extends AppCompatActivity {
         clientIdCopy = clientId;
         clientPasswordcopy = clientPassword;
         stringToConvertCopy = stringToConvert;
+        if ("no".equals(userComingForFirstTime)) {
 
-        validationOfUserANDturnOnNewChannelFlag();
+            Log.d("maintag", "startStreaminggy: " + userComingForFirstTime);
+
+            sendStringToTheFirebase();
+        } else {
+
+            validationOfUserANDturnOnNewChannelFlag();
+            Log.d("maintag", "startStreaminggn: " + userComingForFirstTime);
+        }
+
 
     }
 
     private void validationOfUserANDturnOnNewChannelFlag() {
+        Toast.makeText(publicContext, "here", Toast.LENGTH_SHORT).show();
+        progress = new ProgressDialog(publicContext);
+        progress.setTitle("ALERT");
+        progress.setMessage("initializing streaming");
+        progress.setCancelable(false);
+        progress.show();
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        publicContext.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        String height = String.valueOf(displayMetrics.heightPixels);
+//        String width = String.valueOf(displayMetrics.widthPixels);
 
         RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
 
@@ -67,6 +92,7 @@ public class StartSignStreaming extends AppCompatActivity {
                     Toast.makeText(publicContext, "right credentials", Toast.LENGTH_SHORT).show();
                     currentTimeMiles = response.toString().substring(response.toString().indexOf(",") + 1, response.toString().length());
                     Log.d("MAINTAG", "onResponseCurrentTimeMiles: " + currentTimeMiles);
+                    progress.setMessage("waiting for server response");
                     listenForTokenAndAppId();
                 } else {
                     Toast.makeText(publicContext, "wrong credentials", Toast.LENGTH_SHORT).show();
@@ -85,6 +111,8 @@ public class StartSignStreaming extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("IdOfClient", clientIdCopy);
                 params.put("PasswordOfClient", clientPasswordcopy);
+//                params.put("height", height);
+//                params.put("width", width);
                 return params;
             }
 
@@ -116,23 +144,19 @@ public class StartSignStreaming extends AppCompatActivity {
                                 listenForTokenAndAppId();
                             }
                         }, 1000);
-
-
                     } else {
                         try {
                             Log.d("MAINTAG", "onResponseListener1: Stop" + response.toString());
                             JSONObject jsonObject = new JSONObject(response);
                             tempAppId = String.valueOf(jsonObject.get("appId"));
                             tempTokenNumber = String.valueOf(jsonObject.get("token"));
-                            Log.d("MAINTAG", "onResponse: "+tempChannelName+tempAppId+tempTokenNumber);
+                            Log.d("MAINTAG", "onResponse: " + tempChannelName + tempAppId + tempTokenNumber);
+                            progress.dismiss();
                             initializeAndJoinChannel(tempAppId, tempTokenNumber, currentTimeMiles, publicContext);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -201,10 +225,53 @@ public class StartSignStreaming extends AppCompatActivity {
         container.addView(surfaceView);
         uniqueRtcengin.disableAudio();
         uniqueRtcengin.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid, 1));
-
-
-// Storing data into SharedPreferences for
-     //   userComingForFirstTime = "no";
+        userComingForFirstTime = "no";
 
     }
+
+    private void sendStringToTheFirebase() {
+        countOfTotalHits++;
+        RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/sendStringtoFrameData", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("MAINTAG", "sendStringToTheFirebase" + response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("StringToConvert", stringToConvertCopy);
+                params.put("currentTimeMiles", currentTimeMiles);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("content-type", "application/x-www-form-urlencoded");
+                return params;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    public void stopStreaming() {
+        Toast.makeText(publicContext, "stop streaming", Toast.LENGTH_SHORT).show();
+        uniqueRtcengin.leaveChannel();
+        uniqueRtcengin.destroy();
+        userComingForFirstTime = "null";
+    }
+
+    private void isUserStillUsingChannel() {
+        //  Log.d("MAINTAG",mRtcEventHandler.onRemoteVideoStateChanged(0,0,0,0));
+    }
+
+
 }

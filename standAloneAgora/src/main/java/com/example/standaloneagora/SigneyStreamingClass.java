@@ -232,7 +232,6 @@ public class SigneyStreamingClass extends AppCompatActivity {
 
                         uniqueRtcengin.leaveChannel();
                         uniqueRtcengin.destroy();
-
                         gifView.setVisibility(View.VISIBLE);
                         Glide.with(publicContext)
                                 .load(R.raw.defposegif)
@@ -244,8 +243,8 @@ public class SigneyStreamingClass extends AppCompatActivity {
 
                         totalTimeOfStreming = timeOfStreamingStopped - timeOfStreamingStart;
 
-
                         uploadTotalTimeOfStreaming();
+
                     }
 
                 }
@@ -304,7 +303,6 @@ public class SigneyStreamingClass extends AppCompatActivity {
         timeOfStreamingStopped = (System.currentTimeMillis() / 1000);
 
         totalTimeOfStreming = timeOfStreamingStopped - timeOfStreamingStart;
-
 
         uploadTotalTimeOfStreaming();
     }

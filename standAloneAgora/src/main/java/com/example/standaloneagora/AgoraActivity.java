@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class AgoraActivity extends AppCompatActivity {
     public static final String TAG = "AgoraActivity";
     AgoraClass agoraClass = new AgoraClass();
     RtcEngine uniqueRtcengin;
+    Button button;
     EditText editText;
     SigneyStreamingClass signeyStreamingClass = new SigneyStreamingClass();
     Toasty toasty = new Toasty();
@@ -37,8 +39,7 @@ public class AgoraActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: AgoraActivity");
         editText = findViewById(R.id.edittextBox);
-
-
+        button = findViewById(R.id.showSign);
 
         //  signeyStreamingClass.initializeAndJoinChannel("a598cb8ca7804d4a93c530231b898429","006a598cb8ca7804d4a93c530231b898429IAA8cN8wQEWgPPJcFl0P0IwGez9sKsV0HRQM1UHxhIdxcR4wfbQAAAAAEABg4SwUkWdNYgEAAQCPZ01i","1649153336256",getBaseContext(),findViewById(R.id.remote_video_view_container));
         //  agoraClass.startStreaming("test",1, getBaseContext(), findViewById(R.id.local_video_view_container), findViewById(R.id.remote_video_view_container));
@@ -50,15 +51,15 @@ public class AgoraActivity extends AppCompatActivity {
     }
 
     public void SendDataToFireBase(View view) {
-        startSignStreaming.start("c1", "c1@password", getBaseContext(), editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
+        startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
 
 
 
     @Override
     protected void onStop() {
-      //  startSignStreaming.stopStreaming();
-        super.onStop();
+    startSignStreaming.stopStreaming();
+    super.onStop();
     }
     //  private void downloadAgoraCredentialsFromFirebaseAndRun() {
 //
