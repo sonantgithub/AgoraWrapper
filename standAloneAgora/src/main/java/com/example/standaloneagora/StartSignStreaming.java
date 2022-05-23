@@ -312,6 +312,7 @@ public class StartSignStreaming extends AppCompatActivity {
                             uniqueRtcengin.leaveChannel();
                             uniqueRtcengin.destroy();
                             userComingForFirstTime = "null";
+                            mSocket.emit("killChannel", currentTimeMiles); // send message to the node
                             gifView.setVisibility(View.VISIBLE);
                             Glide.with(publicContext)
                                     .load(R.raw.defposegif)
