@@ -278,11 +278,15 @@ public class StartSignStreaming extends AppCompatActivity {
     }
 
     public void stopStreaming() {
-
+        try {
+            mSocket = IO.socket("https://signey-streaming-server.herokuapp.com");
+        } catch (URISyntaxException e) {
+        }
+        mSocket.connect();
+        mSocket.emit("killChannel", currentTimeMiles); // send message to the node
             uniqueRtcengin.leaveChannel();
             uniqueRtcengin.destroy();
             userComingForFirstTime = "null";
-        mSocket.emit("killChannel", currentTimeMiles); // send message to the node
 
     }
 
@@ -302,7 +306,6 @@ public class StartSignStreaming extends AppCompatActivity {
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            String nameOfClass = publicContext.getClass().getSimpleName();
             Activity activity = (Activity) publicContext;
             activity.runOnUiThread(new Runnable() {
                 @Override
