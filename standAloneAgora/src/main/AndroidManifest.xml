@@ -9,6 +9,10 @@
         <activity
             android:name=".TestingActivity"
             android:exported="false" />
+        <service
+            android:name=".service"
+            android:exported="true"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

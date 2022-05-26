@@ -3,6 +3,8 @@ package com.example.standaloneagora;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -51,8 +53,7 @@ public class StartSignStreaming extends AppCompatActivity {
     public Context publicContext;
     public String clientIdCopy, clientPasswordcopy, stringToConvertCopy;
     public String tempChannelName, tempAppId, tempTokenNumber;
-    public String time, userComingForFirstTime, currentTimeMiles;
-    public long timeOfStreamingStopped, totalTimeOfStreming;
+    public String userComingForFirstTime, currentTimeMiles;
     public int countOfTotalHits;
     public int countOfNumberOfHit;
     ProgressDialog progress;
@@ -239,7 +240,7 @@ public class StartSignStreaming extends AppCompatActivity {
         uniqueRtcengin.disableAudio();
         uniqueRtcengin.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid, 1));
         userComingForFirstTime = "no";
-          isUserStillUsingChannel();
+        isUserStillUsingChannel();
 
     }
 
@@ -277,18 +278,6 @@ public class StartSignStreaming extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void stopStreaming() {
-        try {
-            mSocket = IO.socket("https://signey-streaming-server.herokuapp.com");
-        } catch (URISyntaxException e) {
-        }
-        mSocket.connect();
-        mSocket.emit("killChannel", currentTimeMiles); // send message to the node
-            uniqueRtcengin.leaveChannel();
-            uniqueRtcengin.destroy();
-            userComingForFirstTime = "null";
-
-    }
 
     private void isUserStillUsingChannel() {
         {
@@ -298,7 +287,6 @@ public class StartSignStreaming extends AppCompatActivity {
             }
         }
         mSocket.connect(); // connect the socket
-
         mSocket.on(currentTimeMiles, onNewMessage); //Listen response coming from node
         mSocket.emit("getTheChannelName", currentTimeMiles); // send message to the node
     }
@@ -311,7 +299,7 @@ public class StartSignStreaming extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        if ("yes".equals(args[0].toString())){
+                        if ("yes".equals(args[0].toString())) {
                             uniqueRtcengin.leaveChannel();
                             uniqueRtcengin.destroy();
                             userComingForFirstTime = "null";
@@ -323,12 +311,22 @@ public class StartSignStreaming extends AppCompatActivity {
                                     .into((ImageView) gifView);
                         }
 
-                    }
-                    catch (Exception e){
-                        Log.d(TAG, "run: "+e.getMessage());
+                    } catch (Exception e) {
+                        Log.d(TAG, "run: " + e.getMessage());
                     }
                 }
             });
         }
     };
+
+    public void stopStreaming() {
+        uniqueRtcengin.leaveChannel();
+        uniqueRtcengin.destroy();
+        userComingForFirstTime = "null";
+        Activity activity = (Activity) publicContext;
+        Intent intent = new Intent(activity, service.class);
+        intent.putExtra("channelName",currentTimeMiles);
+        publicContext.startService(intent);
+        //startService(new Intent(activity, service.class));
+    }
 }
