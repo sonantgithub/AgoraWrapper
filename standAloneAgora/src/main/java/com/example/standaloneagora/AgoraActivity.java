@@ -2,7 +2,6 @@ package com.example.standaloneagora;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,13 +40,10 @@ public class AgoraActivity extends AppCompatActivity {
         editText = findViewById(R.id.edittextBox);
         button = findViewById(R.id.showSign);
         Log.d(TAG, "onCreate: ");
-       // startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
     public void SendDataToFireBase(View view) {
          startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
-
-
 
     @Override
     protected void onStop() {

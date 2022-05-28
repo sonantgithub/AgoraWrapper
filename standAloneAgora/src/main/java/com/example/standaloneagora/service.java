@@ -24,15 +24,15 @@ public class service extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-  //          Toast.makeText(this, "Service started by user."+intent.getStringExtra("channelName"), Toast.LENGTH_LONG).show();
+        //  Toast.makeText(this, "Service started by user."+intent.getStringExtra("channelName"), Toast.LENGTH_LONG).show();
         String currentTimeMiles = intent.getStringExtra("channelName");
-
         try {
             Socket mSocket;
             mSocket = IO.socket("https://signey-streaming-server.herokuapp.com");
             mSocket.connect(); // connect the socket
             mSocket.on(currentTimeMiles, onNewMessage); //Listen response coming from node
             mSocket.emit("killChannel", currentTimeMiles); // send message to the node
+
 
         } catch (URISyntaxException e) {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
@@ -42,7 +42,7 @@ public class service extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Toast.makeText(this, "Service destroyed by user.", Toast.LENGTH_LONG).show();
+     // Toast.makeText(this, "Service destroyed by user.", Toast.LENGTH_LONG).show();
     }
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override

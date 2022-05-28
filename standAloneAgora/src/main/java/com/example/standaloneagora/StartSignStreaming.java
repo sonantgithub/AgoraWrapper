@@ -59,7 +59,6 @@ public class StartSignStreaming extends AppCompatActivity {
     ProgressDialog progress;
     private Socket mSocket;
 
-
     public void start(String clientId, String clientPassword, Context context, String stringToConvert, View view, View gifId) {
         publicContext = context;
         remoteViewPublic = view;
@@ -278,7 +277,6 @@ public class StartSignStreaming extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
     private void isUserStillUsingChannel() {
         {
             try {
@@ -320,13 +318,13 @@ public class StartSignStreaming extends AppCompatActivity {
     };
 
     public void stopStreaming() {
-        uniqueRtcengin.leaveChannel();
-        uniqueRtcengin.destroy();
-        userComingForFirstTime = "null";
         Activity activity = (Activity) publicContext;
         Intent intent = new Intent(activity, service.class);
         intent.putExtra("channelName",currentTimeMiles);
         publicContext.startService(intent);
+        uniqueRtcengin.leaveChannel();
+        uniqueRtcengin.destroy();
+        userComingForFirstTime = "null";
         //startService(new Intent(activity, service.class));
     }
 }
