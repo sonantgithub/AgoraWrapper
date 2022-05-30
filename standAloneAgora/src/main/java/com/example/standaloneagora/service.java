@@ -33,7 +33,6 @@ public class service extends Service {
             mSocket.on(currentTimeMiles, onNewMessage); //Listen response coming from node
             mSocket.emit("killChannel", currentTimeMiles); // send message to the node
 
-
         } catch (URISyntaxException e) {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
         }

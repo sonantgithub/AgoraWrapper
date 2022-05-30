@@ -53,7 +53,7 @@ public class StartSignStreaming extends AppCompatActivity {
     public Context publicContext;
     public String clientIdCopy, clientPasswordcopy, stringToConvertCopy;
     public String tempChannelName, tempAppId, tempTokenNumber;
-    public String userComingForFirstTime, currentTimeMiles;
+    public String userComingForFirstTime, currentTimeMiles,dontLetMethodCallingTwoTimes;
     public int countOfTotalHits;
     public int countOfNumberOfHit;
     ProgressDialog progress;
@@ -245,6 +245,7 @@ public class StartSignStreaming extends AppCompatActivity {
 
     private void sendStringToTheFirebase() {
         countOfTotalHits++;
+        dontLetMethodCallingTwoTimes="true";
         RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/sendStringtoFrameData", new Response.Listener<String>() {
@@ -259,10 +260,17 @@ public class StartSignStreaming extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() {
+
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("StringToConvert", stringToConvertCopy);
-                params.put("currentTimeMiles", currentTimeMiles);
-                params.put("countOfTotalHits", String.valueOf(countOfTotalHits));
+                if (dontLetMethodCallingTwoTimes.equals("true"))
+                {
+                    params.put("StringToConvert", stringToConvertCopy);
+                    params.put("currentTimeMiles", currentTimeMiles);
+                    params.put("countOfTotalHits", String.valueOf(countOfTotalHits));
+                    Log.d(TAG, "sendStringToTheFirebase: checkIfMethodCallingTwoTimes123");
+                    dontLetMethodCallingTwoTimes="false";
+                }
+
                 return params;
             }
 
