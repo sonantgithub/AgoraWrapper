@@ -42,7 +42,6 @@ public class AgoraActivity extends AppCompatActivity {
     public void SendDataToFireBase(View view) {
          startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
-
     @Override
     protected void onStop() {
         super.onStop();

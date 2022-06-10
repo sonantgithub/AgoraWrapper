@@ -1,11 +1,15 @@
 package com.example.standaloneagora;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -15,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
@@ -29,6 +34,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +48,7 @@ import java.net.URISyntaxException;
 import java.security.PublicKey;
 import java.security.cert.Extension;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -53,9 +65,8 @@ public class StartSignStreaming extends AppCompatActivity {
     public Context publicContext;
     public String clientIdCopy, clientPasswordcopy, stringToConvertCopy;
     public String tempChannelName, tempAppId, tempTokenNumber;
-    public String userComingForFirstTime, currentTimeMiles,dontLetMethodCallingTwoTimes;
-    public int countOfTotalHits;
-    public int countOfNumberOfHit;
+    public String userComingForFirstTime, currentTimeMiles, dontLetMethodCallingTwoTimes;
+    public int countOfTotalHits, countOfNumberOfHit;
     ProgressDialog progress;
     private Socket mSocket;
 
@@ -66,18 +77,101 @@ public class StartSignStreaming extends AppCompatActivity {
         clientIdCopy = clientId;
         clientPasswordcopy = clientPassword;
         stringToConvertCopy = stringToConvert;
-        if ("no".equals(userComingForFirstTime)) {
-
-            Log.d("maintag", "startStreaminggy: " + userComingForFirstTime);
-
-            sendStringToTheFirebase();
-        } else {
-
-            validationOfUserANDturnOnNewChannelFlag();
-            Log.d("maintag", "startStreaminggn: " + userComingForFirstTime);
-        }
+        giveRunTimePermission();
 
 
+    }
+
+    private void giveRunTimePermission() {
+        Activity activity = (Activity) publicContext;
+        Dexter.withActivity(activity)
+                // below line is use to request the number of
+                // permissions which are required in our app.
+                .withPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+                // after adding permissions we are
+                // calling an with listener method.
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        // this method is called when all permissions are granted
+                        if (multiplePermissionsReport.areAllPermissionsGranted()) {
+                            if ("no".equals(userComingForFirstTime)) {
+
+                                Log.d("maintag", "startStreaminggy: " + userComingForFirstTime);
+
+                                sendStringToTheFirebase();
+                            } else {
+
+                                validationOfUserANDturnOnNewChannelFlag();
+                                Log.d("maintag", "startStreaminggn: " + userComingForFirstTime);
+                            }
+
+                        }
+                        // check for permanent denial of any permission
+                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {
+                            // permission is denied permanently,dgo1
+                            // we will show user a dialog message.
+                            showSettingsDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<com.karumi.dexter.listener.PermissionRequest> list, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
+                    }
+                }).withErrorListener(new PermissionRequestErrorListener() {
+            // this method is use to handle error
+            // in runtime permissions
+            @Override
+            public void onError(DexterError error) {
+                // we are displaying a toast message for error message.
+                Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
+            }
+        })
+                // below line is use to run the permissions
+                // on same thread and to check the permissions
+                .onSameThread().check();
+
+
+    }
+
+    private void showSettingsDialog() {
+        // we are displaying an alert dialog for permissions
+        AlertDialog.Builder builder = new AlertDialog.Builder(publicContext);
+
+        // below line is the title
+        // for our alert dialog.
+        builder.setTitle("Need Permissions");
+
+        // below line is our message for our dialog
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // this method is called on click on positive
+                // button and on clicking shit button we
+                // are redirecting our user from our app to the
+                // settings page of our app.
+                dialog.cancel();
+                // below is the intent from which we
+                // are redirecting our user.
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 101);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // this method is called when
+                // user click on negative button.
+                finishAffinity();
+            }
+        });
+        // below line is used
+        // to display our dialog
+        builder.show();
     }
 
     private void validationOfUserANDturnOnNewChannelFlag() {
@@ -163,7 +257,6 @@ public class StartSignStreaming extends AppCompatActivity {
                             tempAppId = String.valueOf(jsonObject.get("appId"));
                             tempTokenNumber = String.valueOf(jsonObject.get("token"));
                             Log.d("MAINTAG", "onResponse: " + tempChannelName + tempAppId + tempTokenNumber);
-                            progress.dismiss();
                             initializeAndJoinChannel(tempAppId, tempTokenNumber, currentTimeMiles, publicContext);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -213,7 +306,6 @@ public class StartSignStreaming extends AppCompatActivity {
 
         mRtcEngine.joinChannel(token, channelName, "", 0);
         uniqueRtcengin = mRtcEngine;
-
     }
 
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
@@ -235,6 +327,7 @@ public class StartSignStreaming extends AppCompatActivity {
         SurfaceView surfaceView = RtcEngine.CreateRendererView(publicContext);
         surfaceView.setZOrderMediaOverlay(true);
         container.addView(surfaceView);
+        progress.dismiss();
         uniqueRtcengin.disableAudio();
         uniqueRtcengin.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid, 1));
         userComingForFirstTime = "no";
@@ -244,7 +337,7 @@ public class StartSignStreaming extends AppCompatActivity {
 
     private void sendStringToTheFirebase() {
         countOfTotalHits++;
-        dontLetMethodCallingTwoTimes="true";
+        dontLetMethodCallingTwoTimes = "true";
         RequestQueue requestQueue = com.android.volley.toolbox.Volley.newRequestQueue(publicContext);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/sendStringtoFrameData", new Response.Listener<String>() {
@@ -261,13 +354,12 @@ public class StartSignStreaming extends AppCompatActivity {
             protected Map<String, String> getParams() {
 
                 Map<String, String> params = new HashMap<String, String>();
-               if (dontLetMethodCallingTwoTimes.equals("true"))
-                {
+                if (dontLetMethodCallingTwoTimes.equals("true")) {
                     params.put("StringToConvert", stringToConvertCopy);
                     params.put("currentTimeMiles", currentTimeMiles);
                     params.put("countOfTotalHits", String.valueOf(countOfTotalHits));
                     Log.d(TAG, "sendStringToTheFirebase: checkIfMethodCallingTwoTimes123");
-                 dontLetMethodCallingTwoTimes="false";
+                    dontLetMethodCallingTwoTimes = "false";
                 }
 
                 return params;
@@ -327,7 +419,7 @@ public class StartSignStreaming extends AppCompatActivity {
     public void stopStreaming() {
         Activity activity = (Activity) publicContext;
         Intent intent = new Intent(activity, service.class);
-        intent.putExtra("channelName",currentTimeMiles);
+        intent.putExtra("channelName", currentTimeMiles);
         publicContext.startService(intent);
         uniqueRtcengin.leaveChannel();
         uniqueRtcengin.destroy();
