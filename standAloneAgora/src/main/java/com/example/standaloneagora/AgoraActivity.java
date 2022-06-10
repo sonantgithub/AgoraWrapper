@@ -35,11 +35,9 @@ public class AgoraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agora);
-
-        Log.d(TAG, "onCreate: AgoraActivity");
         editText = findViewById(R.id.edittextBox);
         button = findViewById(R.id.showSign);
-        Log.d(TAG, "onCreate: ");
+        startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
     }
     public void SendDataToFireBase(View view) {
          startSignStreaming.start("c1", "c1@password",AgoraActivity.this, editText.getText().toString(), findViewById(R.id.remote_video_view_container),findViewById(R.id.gifView));
@@ -49,6 +47,5 @@ public class AgoraActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         startSignStreaming.stopStreaming();
-        Log.d(TAG, "onStop:");
     }
 }

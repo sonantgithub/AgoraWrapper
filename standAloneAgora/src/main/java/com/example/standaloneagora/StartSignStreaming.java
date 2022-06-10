@@ -115,7 +115,6 @@ public class StartSignStreaming extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("MAINTAG", "123onError: " + error.getMessage());
-
                 Toast.makeText(publicContext, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }) {
@@ -262,13 +261,13 @@ public class StartSignStreaming extends AppCompatActivity {
             protected Map<String, String> getParams() {
 
                 Map<String, String> params = new HashMap<String, String>();
-                if (dontLetMethodCallingTwoTimes.equals("true"))
+               if (dontLetMethodCallingTwoTimes.equals("true"))
                 {
                     params.put("StringToConvert", stringToConvertCopy);
                     params.put("currentTimeMiles", currentTimeMiles);
                     params.put("countOfTotalHits", String.valueOf(countOfTotalHits));
                     Log.d(TAG, "sendStringToTheFirebase: checkIfMethodCallingTwoTimes123");
-                    dontLetMethodCallingTwoTimes="false";
+                 dontLetMethodCallingTwoTimes="false";
                 }
 
                 return params;

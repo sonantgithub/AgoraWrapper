@@ -8,7 +8,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="440dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
         android:background="@android:color/darker_gray">
 
         <FrameLayout
@@ -16,12 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
         <ImageView
             android:id="@+id/gifView"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="440dp" />
-
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
