@@ -34,7 +34,6 @@ public class SigneyStreamingClass extends AppCompatActivity {
 
     public static final String maintag = "SigneyStreamingClass";
 
-    Toasty toasty = new Toasty();
     public RtcEngine uniqueRtcengin;
     public View remoteViewPublic, gifView;
     public Context publicContext;
@@ -82,13 +81,13 @@ public class SigneyStreamingClass extends AppCompatActivity {
                 if (password.equals(clientPasswordcopy)) {
                     turnOnNeedNewChannelFlag();
                 } else {
-                    toasty.simpleMsg(publicContext, "Wrong Password");
+                    //toasty.simpleMsg(publicContext, "Wrong Password");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                toasty.simpleMsg(publicContext, "Wrong clientId");
+                //toasty.simpleMsg(publicContext, "Wrong clientId");
             }
         });
     }

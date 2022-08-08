@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -18,39 +17,27 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URISyntaxException;
-import java.security.PublicKey;
-import java.security.cert.Extension;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
@@ -136,25 +123,14 @@ public class StartSignStreaming extends AppCompatActivity {
     }
 
     private void showSettingsDialog() {
-        // we are displaying an alert dialog for permissions
         AlertDialog.Builder builder = new AlertDialog.Builder(publicContext);
 
-        // below line is the title
-        // for our alert dialog.
         builder.setTitle("Need Permissions");
-
-        // below line is our message for our dialog
         builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
         builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // this method is called on click on positive
-                // button and on clicking shit button we
-                // are redirecting our user from our app to the
-                // settings page of our app.
                 dialog.cancel();
-                // below is the intent from which we
-                // are redirecting our user.
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
@@ -164,13 +140,10 @@ public class StartSignStreaming extends AppCompatActivity {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // this method is called when
-                // user click on negative button.
-                finishAffinity();
+
+                Toast.makeText(publicContext, "Permission required", Toast.LENGTH_SHORT).show();
             }
         });
-        // below line is used
-        // to display our dialog
         builder.show();
     }
 
@@ -194,10 +167,10 @@ public class StartSignStreaming extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://us-central1-dsiapp-103c4.cloudfunctions.net/validationOfTheUser", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("MAINTAG", "123onResponse: " + response.toString());
+                Log.d("MAINTAG", "123onResponse: " + response);
 
-                if (response.toString().contains("Match Strings")) {
-                    currentTimeMiles = response.toString().substring(response.toString().indexOf(",") + 1, response.toString().length());
+                if (response.contains("Match Strings")) {
+                    currentTimeMiles = response.substring(response.indexOf(",") + 1, response.toString().length());
                     Log.d("MAINTAG", "onResponseCurrentTimeMiles: " + currentTimeMiles);
                     progress.setMessage("waiting for server response");
                     listenForTokenAndAppId();
@@ -352,7 +325,6 @@ public class StartSignStreaming extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() {
-
                 Map<String, String> params = new HashMap<String, String>();
                 if (dontLetMethodCallingTwoTimes.equals("true")) {
                     params.put("StringToConvert", stringToConvertCopy);
@@ -419,11 +391,12 @@ public class StartSignStreaming extends AppCompatActivity {
     public void stopStreaming() {
         Activity activity = (Activity) publicContext;
         Intent intent = new Intent(activity, service.class);
-        intent.putExtra("channelName", currentTimeMiles);
+        intent.putExtra("activityName",activity.getClass().getSimpleName());
         publicContext.startService(intent);
-        uniqueRtcengin.leaveChannel();
-        uniqueRtcengin.destroy();
-        userComingForFirstTime = "null";
-        //startService(new Intent(activity, service.class));
+
+        //  uniqueRtcengin.leaveChannel();
+        // uniqueRtcengin.destroy();
+        // userComingForFirstTime = "null";
     }
+
 }
